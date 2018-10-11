@@ -1,48 +1,53 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace StudentExercises {
     class Program {
         static void Main (string[] args) {
 
             // Create 4, or more, exercises.
-            Exercise Ex1 = new Exercise ("Chicken Monkey", "JavaScript");
-            Exercise Ex2 = new Exercise ("Advanced CSS Selectors", "CSS");
-            Exercise Ex3 = new Exercise ("React Components", "React");
-            Exercise Ex4 = new Exercise ("Yellow Brick Road", "HTML");
+            Exercise ChickenMonkey = new Exercise ("Chicken Monkey", "JavaScript");
+            Exercise CssSelectors = new Exercise ("Advanced CSS Selectors", "CSS");
+            Exercise ReactComponents = new Exercise ("React Components", "React");
+            Exercise YellowBrickRoad = new Exercise ("Yellow Brick Road", "HTML");
 
             // Create 3, or more, cohorts.
-            Cohort C26 = new Cohort ();
-            Cohort C27 = new Cohort ();
-            Cohort C28 = new Cohort ();
+            Cohort C26 = new Cohort () { name = "Day Cohort 26" };
+            Cohort C27 = new Cohort () { name = "Day Cohort 27" };
+            Cohort C28 = new Cohort () { name = "Day Cohort 28" };
 
             // Create 4, or more, students and assign them to one of the cohorts.
-            Student Jonathan = new Student ();
-            Jonathan.FirstName = "Jonathan";
-            Jonathan.LastName = "Edwards";
-            Jonathan.SlackHandle = "@Jonathan";
-            Jonathan.Cohort = "Day Cohort 27";
+            Student Jonathan = new Student () {
+                FirstName = "Jonathan",
+                LastName = "Edwards",
+                SlackHandle = "@Jonathan",
+                Cohort = C27
+            };
             C27.StudentCollection.Add (Jonathan);
 
-            Student Alejandro = new Student ();
-            Alejandro.FirstName = "Alejandro";
-            Alejandro.LastName = "Font";
-            Alejandro.SlackHandle = "@Alejandro";
-            Alejandro.Cohort = "Day Cohort 28";
+            Student Alejandro = new Student () {
+                FirstName = "Alejandro",
+                LastName = "Font",
+                SlackHandle = "@Alejandro",
+                Cohort = C28
+            };
             C28.StudentCollection.Add (Alejandro);
 
-            Student Madi = new Student ();
-            Madi.FirstName = "Madi";
-            Madi.LastName = "Peper";
-            Madi.SlackHandle = "@Madi";
-            Madi.Cohort = "Day Cohort 27";
+            Student Madi = new Student () {
+                FirstName = "Madi",
+                LastName = "Peper",
+                SlackHandle = "@Madi",
+                Cohort = C27
+            };
             C27.StudentCollection.Add (Madi);
 
-            Student Streator = new Student ();
-            Streator.FirstName = "Streator";
-            Streator.LastName = "Ward";
-            Streator.SlackHandle = "@Streator";
-            Streator.Cohort = "Day Cohort 26";
+            Student Streator = new Student () {
+                FirstName = "Streator",
+                LastName = "Ward",
+                SlackHandle = "@Streator",
+                Cohort = C26
+            };
             C26.StudentCollection.Add (Streator);
 
             // Create 3, or more, instructors and assign them to one of the cohorts.
@@ -56,35 +61,47 @@ namespace StudentExercises {
             C28.InstructorCollection.Add (Kimmy);
 
             // Have each instructor assign 2 exercises to each of the students.
-            Steve.AssignExercise (Jonathan, Ex1);
-            Steve.AssignExercise (Jonathan, Ex4);
+            Steve.AssignExercise (Jonathan, ChickenMonkey);
+            Steve.AssignExercise (Jonathan, CssSelectors);
 
-            Steve.AssignExercise (Madi, Ex2);
-            Steve.AssignExercise (Madi, Ex3);
+            Steve.AssignExercise (Madi, CssSelectors);
+            Steve.AssignExercise (Madi, ReactComponents);
 
-            Meg.AssignExercise (Streator, Ex1);
-            Meg.AssignExercise (Streator, Ex2);
+            Meg.AssignExercise (Streator, ChickenMonkey);
+            Meg.AssignExercise (Streator, CssSelectors);
 
-            Kimmy.AssignExercise (Alejandro, Ex3);
-            Kimmy.AssignExercise (Alejandro, Ex4);
+            Kimmy.AssignExercise (Alejandro, ReactComponents);
+            Kimmy.AssignExercise (Alejandro, YellowBrickRoad);
 
             // Create a list of students. Add all of the student instances to it.
-            List<Student> students = new List<Student> ();
-            students.Add (Jonathan);
-            students.Add (Alejandro);
-            students.Add (Madi);
-            students.Add (Streator);
+            List<Student> students = new List<Student> () {
+                Jonathan,
+                Alejandro,
+                Madi,
+                Streator
+            };
 
             // Create a list of exercises.Add all of the exercise instances to it.
-            List<Exercise> exercises = new List<Exercise> ();
-            exercises.Add (Ex1);
-            exercises.Add (Ex2);
-            exercises.Add (Ex3);
-            exercises.Add (Ex4);
+            List<Exercise> exercises = new List<Exercise> () {
+                ChickenMonkey,
+                CssSelectors,
+                ReactComponents,
+                YellowBrickRoad
+            };
 
-            // foreach (Student student in students) {
-            //     Console.Write($"{student.FirstName} is working on {student.ExerciseCollection[0].Name} and {student.ExerciseCollection[1].Name}. ");
-            // }
+            // Create a list of instructors. Add all of the instructor instances to it.
+            List<Instructor> instructors = new List<Instructor> () {
+                Steve,
+                Meg,
+                Kimmy,
+            };
+
+            // Create a list of cohorts. Add all of the cohort instances to it.
+            List<Cohort> cohorts = new List<Cohort> () {
+                C26,
+                C27,
+                C28
+            };
 
             foreach (Student student in students) {
                 string StudentName = student.FirstName;
@@ -93,16 +110,49 @@ namespace StudentExercises {
 
                 foreach (Exercise exer in student.ExerciseCollection) {
                     if (count == 0) {
-                        StudentExerciseList = $"{exer.Name}";
+                        StudentExerciseList = $"{exer.Name} in {exer.Language}";
                         count++;
                     } else {
-                        StudentExerciseList = $"{exer.Name} and {StudentExerciseList}.";
+                        StudentExerciseList = $"{exer.Name} in {exer.Language} and {StudentExerciseList}.";
                         count++;
                     }
                 }
 
-                Console.WriteLine ($"{StudentName} is working on {StudentExerciseList}");
+                Console.WriteLine ($"{StudentName} of {student.Cohort.name} is working on {StudentExerciseList}");
+
             }
+
+            // List exercises for the JavaScript language by using the Where() LINQ method.
+            List<Exercise> JavaScriptExercises =
+                (from js in exercises where js.Language == "JavaScript"
+                    select js).ToList ();
+
+            Console.WriteLine ("----- JS Exercises -----");
+            foreach (Exercise ex in JavaScriptExercises) {
+                Console.WriteLine (ex.Name);
+            }
+
+            // List students in a particular cohort by using the Where() LINQ method.
+            List<Student> C27Students =
+                (from student in students where student.Cohort.name == "Day Cohort 27"
+                    select student).ToList ();
+
+            Console.WriteLine ("----- Cohort 27 Students -----");
+            foreach (Student stu in C27Students) {
+                Console.WriteLine (stu.FirstName);
+            }
+
+            // List instructors in a particular cohort by using the Where() LINQ method.
+            List<Instructor> C27Intructors = 
+            (from ins in instructors
+            where ins.Cohort.name == "Day Cohort 27"
+            select ins).ToList();
+
+             Console.WriteLine ("----- Cohort 27 Instructors -----");
+            foreach (Instructor ins in C27Intructors) {
+                Console.WriteLine (ins.FirstName);
+            }
+
         }
     }
 }
