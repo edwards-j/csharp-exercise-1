@@ -50,19 +50,43 @@ namespace StudentExercises {
             };
             C26.StudentCollection.Add (Streator);
 
+            Student Ricky = new Student () {
+                FirstName = "Ricky",
+                LastName = "Bruner",
+                SlackHandle = "@ricky",
+                Cohort = C26
+            };
+            C26.StudentCollection.Add (Ricky);
+
             // Create 3, or more, instructors and assign them to one of the cohorts.
-            Instructor Steve = new Instructor ();
+            Instructor Steve = new Instructor () {
+                FirstName = "Steve",
+                LastName = "Brownlee",
+                SlackHandle = "@coach",
+                Cohort = C27
+            };
             C27.InstructorCollection.Add (Steve);
 
-            Instructor Meg = new Instructor ();
+            Instructor Meg = new Instructor () {
+                FirstName = "Meg",
+                LastName = "Ducharme",
+                SlackHandle = "@meg",
+                Cohort = C26
+            };;
             C26.InstructorCollection.Add (Meg);
 
-            Instructor Kimmy = new Instructor ();
+            Instructor Kimmy = new Instructor () {
+                FirstName = "Kimmy",
+                LastName = "Bird",
+                SlackHandle = "@kimmy",
+                Cohort = C28
+            };;
             C28.InstructorCollection.Add (Kimmy);
 
             // Have each instructor assign 2 exercises to each of the students.
             Steve.AssignExercise (Jonathan, ChickenMonkey);
             Steve.AssignExercise (Jonathan, CssSelectors);
+            Steve.AssignExercise (Jonathan, ReactComponents);
 
             Steve.AssignExercise (Madi, CssSelectors);
             Steve.AssignExercise (Madi, ReactComponents);
@@ -78,7 +102,8 @@ namespace StudentExercises {
                 Jonathan,
                 Alejandro,
                 Madi,
-                Streator
+                Streator,
+                Ricky
             };
 
             // Create a list of exercises.Add all of the exercise instances to it.
@@ -143,16 +168,57 @@ namespace StudentExercises {
             }
 
             // List instructors in a particular cohort by using the Where() LINQ method.
-            List<Instructor> C27Intructors = 
-            (from ins in instructors
-            where ins.Cohort.name == "Day Cohort 27"
-            select ins).ToList();
+            List<Instructor> C27Instructors =
+                (from ins in instructors where ins.Cohort.name == "Day Cohort 27"
+                    select ins).ToList ();
 
-             Console.WriteLine ("----- Cohort 27 Instructors -----");
-            foreach (Instructor ins in C27Intructors) {
+            Console.WriteLine ("----- Cohort 27 Instructors -----");
+            foreach (Instructor ins in C27Instructors) {
                 Console.WriteLine (ins.FirstName);
             }
 
+            // Sort the students by their last name.
+            List<Student> StudentsByLastName =
+                (from student in students
+                orderby student.LastName
+                select student).ToList();
+
+            Console.WriteLine ("----- Students By Last Name -----");
+            foreach (Student stu in StudentsByLastName) {
+                Console.WriteLine ($"{stu.FirstName} {stu.LastName}");
+            }
+
+            // Display any students that aren't working on any exercises 
+            // (Make sure one of your student instances don't have any exercises.
+            // Create a new student if you need to.)
+
+            List<Student> StudentsWithNoWork = 
+            (from stu in students
+            where stu.ExerciseCollection.Count == 0
+            select stu).ToList();
+
+            Console.WriteLine ("----- Students Not Working On Exercises -----");
+            foreach (Student stu in StudentsWithNoWork) {
+                Console.WriteLine ($"{stu.FirstName}");
+            }
+
+            // Which student is working on the most exercises? 
+            // Make sure one of your students has more exercises than the others.
+            List<Student> StudentWithMostWork =
+            (from stu in students
+            where stu.ExerciseCollection.Count > 2
+            select stu).ToList();
+
+             Console.WriteLine ("----- Student With Most Work -----");
+             foreach (Student stu in StudentWithMostWork) {
+                Console.WriteLine ($"{stu.FirstName}");
+            }
+
+            // How many students in each cohort?
+            Console.WriteLine ("----- How many students in each cohort? -----");
+            foreach (Cohort cohort in cohorts) {
+                Console.WriteLine ($"{cohort.name} has {cohort.StudentCollection.Count} students in it");
+            }
         }
     }
 }
