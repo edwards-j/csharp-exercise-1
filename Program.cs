@@ -1,16 +1,37 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Data.Sqlite;
+using System.Collections;
+using Dapper;
 
 namespace StudentExercises {
     class Program {
         static void Main (string[] args) {
 
             // Create 4, or more, exercises.
-            Exercise ChickenMonkey = new Exercise ("Chicken Monkey", "JavaScript");
-            Exercise CssSelectors = new Exercise ("Advanced CSS Selectors", "CSS");
-            Exercise ReactComponents = new Exercise ("React Components", "React");
-            Exercise YellowBrickRoad = new Exercise ("Yellow Brick Road", "HTML");
+            // Exercise ChickenMonkey = new Exercise ("Chicken Monkey", "JavaScript");
+            // Exercise CssSelectors = new Exercise ("Advanced CSS Selectors", "CSS");
+            // Exercise ReactComponents = new Exercise ("React Components", "React");
+            // Exercise YellowBrickRoad = new Exercise ("Yellow Brick Road", "HTML");
+
+            Exercise ChickenMonkey = new Exercise () {
+                Name = "Chicken Monkey",
+                Language = "JavaScript"
+            };
+            Exercise CssSelectors = new Exercise () {
+                Name = "Advanced CSS Selectors",
+                Language = "CSS"
+            };
+            Exercise ReactComponents = new Exercise () {
+                Name = "React Components",
+                Language = "React"
+            };
+            Exercise YellowBrickRoad = new Exercise () {
+                Name = "Yellow Brick Road",
+                Language = "HTML"
+            };
 
             // Create 3, or more, cohorts.
             Cohort C26 = new Cohort () { name = "Day Cohort 26" };
@@ -179,9 +200,7 @@ namespace StudentExercises {
 
             // Sort the students by their last name.
             List<Student> StudentsByLastName =
-                (from student in students
-                orderby student.LastName
-                select student).ToList();
+                (from student in students orderby student.LastName select student).ToList ();
 
             Console.WriteLine ("----- Students By Last Name -----");
             foreach (Student stu in StudentsByLastName) {
@@ -189,13 +208,8 @@ namespace StudentExercises {
             }
 
             // Display any students that aren't working on any exercises 
-            // (Make sure one of your student instances don't have any exercises.
-            // Create a new student if you need to.)
-
-            List<Student> StudentsWithNoWork = 
-            (from stu in students
-            where stu.ExerciseCollection.Count == 0
-            select stu).ToList();
+            List<Student> StudentsWithNoWork =
+                (from stu in students where stu.ExerciseCollection.Count == 0 select stu).ToList ();
 
             Console.WriteLine ("----- Students Not Working On Exercises -----");
             foreach (Student stu in StudentsWithNoWork) {
@@ -203,22 +217,41 @@ namespace StudentExercises {
             }
 
             // Which student is working on the most exercises? 
-            // Make sure one of your students has more exercises than the others.
             List<Student> StudentWithMostWork =
-            (from stu in students
-            where stu.ExerciseCollection.Count > 2
-            select stu).ToList();
+                (from stu in students orderby stu.ExerciseCollection.Count descending select stu).ToList ();
 
-             Console.WriteLine ("----- Student With Most Work -----");
-             foreach (Student stu in StudentWithMostWork) {
-                Console.WriteLine ($"{stu.FirstName}");
-            }
+            Console.WriteLine ("----- Student With Most Work -----");
+            Console.WriteLine ($"{StudentWithMostWork.First().FirstName} is the student with the most exercises");
 
             // How many students in each cohort?
             Console.WriteLine ("----- How many students in each cohort? -----");
             foreach (Cohort cohort in cohorts) {
                 Console.WriteLine ($"{cohort.name} has {cohort.StudentCollection.Count} students in it");
             }
+
+            SqliteConnection db = DatabaseInterface.Connection;
+
+            // Query the database for all the Exercises.
+            List<Exercise> AllEx = db.Query<Exercise> (@"SELECT * FROM Exercise").ToList ();
+            Console.WriteLine($"There are {AllEx.Count} exercises");
+
+            // Find all the exercises in the database where the language is JavaScript.
+            List<Exercise> JavaScriptEx = 
+            db.Query<Exercise>(@"SELECT  *
+                                FROM Exercise e
+                                WHERE e.ExerciseLanguage = 'JavaScript'
+                                ").ToList();
+
+            Console.WriteLine($"There are {JavaScriptEx.Count} JS exercises");
+            // Insert a new exercise into the database.
+            db.Execute(@"
+            INSERT INTO exercise (name, ExerciseLanguage) VALUES ('Planets', 'C#');
+            ");
+            // Find all instructors in the database. Include each instructor's cohort.
+            // Insert a new instructor into the database. Assign the instructor to an existing cohort.
+            // Find all the students in the database. Include each student's cohort AND each student's list of exercises.
+            // Assign an existing exercise to an existing student.
+
         }
     }
 }
