@@ -8,7 +8,7 @@ namespace StudentExercises {
         // The collection of students in the cohort.
         // The collection of instructors in the cohort.
 
-        public string name {get; set;}
+        public string CohortName {get; set;}
         public List<Student> StudentCollection = new List<Student> ();
         public List<Instructor> InstructorCollection = new List<Instructor> ();
     }
